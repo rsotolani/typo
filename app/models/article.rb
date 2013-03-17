@@ -120,18 +120,7 @@ class Article < Content
       eval(list_function.join('.'))
     end
 
-   end
-
-#  def merge_with(article2_id)
-#    article2 = Article.find_by_id(article2_id)
-#    self.body += article2.body
-#    article2.comments.each do |c|
-#      c.article_id = self.id
-#      self.comments << c
-#    end
-#    Article.find_by_id(article2).delete
-#    self.save
-#  end
+  end
 
   def year_url
     published_at.year.to_s
@@ -427,6 +416,8 @@ class Article < Content
     user.admin? || user_id == user.id
   end
 
+  ### SELF.MERGE WITH
+
   def merge_with other_article_id
     base_article, other_article = self, Article.find(other_article_id)
     @article = Article.get_or_build_article
@@ -439,6 +430,8 @@ class Article < Content
     @article.published_at = Time.now
     @article
   end
+
+## END SELF.MERGE_WITH
 
   protected
 

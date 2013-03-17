@@ -1,4 +1,4 @@
-require 'base64'
+re 'base64'
 
 module Admin; end
 class Admin::ContentController < Admin::BaseController
@@ -36,13 +36,6 @@ class Admin::ContentController < Admin::BaseController
     end
     new_or_edit
   end
-
-#  def merge
-#     @article1 = Article.find_by_id(params[:id])
-#     @article2 = Article.find_by_id(params[:merge_with])
-#     @article1.merge_with(@article2)
-#     redirect_to("/admin/content")
-#  end
 
   def merge
     @base_article_id, @other_article_id = params[:base_article], params[:merge_with]
