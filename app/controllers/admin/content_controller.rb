@@ -37,11 +37,38 @@ class Admin::ContentController < Admin::BaseController
     new_or_edit
   end
 
+#  def merge
+#     @article1 = Article.find_by_id(params[:id])
+#     @article2 = Article.find_by_id(params[:merge_with])
+#     @article1.merge_with(@article2)
+#     redirect_to("/admin/content")
+#  end
+
   def merge
-     @article1 = Article.find_by_id(params[:id])
-     @article2 = Article.find_by_id(params[:merge_with])
-     @article1.merge_with(@article2)
-     redirect_to("/admin/content")
+    @base_article_id, @other_article_id = params[:base_article], params[:merge_with]
+    begin
+    @article = Article.find(@base_article_id).merge_with(@other_article_id)
+
+    if @article.save
+
+      ## Handle Comments
+      @feedbacks = Feedback.where(:article_id => [@base_article_id, @other_article_id])
+      @feedbacks.each do |f|
+        f.article_id = @article.id
+        f.save
+      end
+
+      ## Handle merged articles
+      Article.destroy_all(:id => [@base_article_id, @other_article_id])
+
+      flash[:notice] = _("Article ##{@base_article_id} successfully merged with ##{@other_article_id} into the new Article##{@article.id}!")
+      redirect_to :action => 'index'
+      return
+    end
+  rescue
+    flash[:warning] = _("No such article exists!")
+    redirect_to :action => 'index'
+  end
   end
 
   def destroy

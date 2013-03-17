@@ -122,16 +122,16 @@ class Article < Content
 
    end
 
-  def merge_with(article2_id)
-    article2 = Article.find_by_id(article2_id)
-    self.body += article2.body
-    article2.comments.each do |c|
-      c.article_id = self.id
-      self.comments << c
-    end
-    Article.find_by_id(article2).delete
-    self.save
-  end
+#  def merge_with(article2_id)
+#    article2 = Article.find_by_id(article2_id)
+#    self.body += article2.body
+#    article2.comments.each do |c|
+#      c.article_id = self.id
+#      self.comments << c
+#    end
+#    Article.find_by_id(article2).delete
+#    self.save
+#  end
 
   def year_url
     published_at.year.to_s
@@ -425,6 +425,19 @@ class Article < Content
 
   def access_by?(user)
     user.admin? || user_id == user.id
+  end
+
+  def merge_with other_article_id
+    base_article, other_article = self, Article.find(other_article_id)
+    @article = Article.get_or_build_article
+
+    @article.user_id = other_article.user_id
+    @article.text_filter_id = other_article.text_filter_id
+    @article.title = other_article.title
+    @article.author = other_article.author
+    @article.body = other_article.body + base_article.body
+    @article.published_at = Time.now
+    @article
   end
 
   protected
