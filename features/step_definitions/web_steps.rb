@@ -95,6 +95,11 @@ When /^(.*) within (.*[^:]):$/ do |step, parent, table_or_string|
   with_scope(parent) { When "#{step}:", table_or_string }
 end
 
+Given /^I'm on the '(.+)' page of article with id '(\d+)'$/ do |page_name, article_id|
+  page = page_name + "/" + article_id
+  visit path_to(page)
+end
+
 Given /^(?:|I )am on (.+)$/ do |page_name|
   visit path_to(page_name)
 end
