@@ -41,6 +41,12 @@ Given /^the blog is set up$/ do
                 :profile_id => 1,
                 :name => 'admin',
                 :state => 'active'})
+  User.create!({:login => 'user',
+                :password => 'bbbbbbbb',
+                :email => 'jim@snow.com',
+                :profile_id => 2,
+                :name => 'user',
+                :state => 'active'})
 end
 
 And /^I should see button "(.*)"$/ do |button|
@@ -55,6 +61,17 @@ And /^I am not an admin$/ do
   page.should_not have_content('Settings')
 end
 
+And /^I am logged into the user panel$/ do
+  visit '/accounts/login'
+  fill_in 'user_login', :with => 'user'
+  fill_in 'user_password', :with => 'bbbbbbbb'
+  click_button 'Login'
+  if page.respond_to? :should
+    page.should have_content('Login successful')
+  else
+    assert page.has_content?('Login successful')
+  end
+end
 
 And /^I am logged into the admin panel$/ do
   visit '/accounts/login'
