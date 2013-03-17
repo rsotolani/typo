@@ -43,6 +43,19 @@ Given /^the blog is set up$/ do
                 :state => 'active'})
 end
 
+And /^I should see button "(.*)"$/ do |button|
+  find_button(button).should_not be_false
+end
+
+And /^I should not see button "(.*)"$/ do |button|
+  page.should have_no_button(button)
+end
+
+And /^I am not an admin$/ do
+  page.should_not have_content('Settings')
+end
+
+
 And /^I am logged into the admin panel$/ do
   visit '/accounts/login'
   fill_in 'user_login', :with => 'admin'
